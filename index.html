@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+
+			<h1 id="title" class="mui-title">拍车标</h1>
+			<a id="newphoto" class="mui-icon mui-icon-camera mui-pull-right" style="color: #999;"></a>
+		</header>
+		<div class="mui-content">
+			<div style="padding: 10px;">
+				<img id="smallimg" src="" width="100%">
+			</div>
+
+			<button type="button" id="btnsave">保存到服务器</button>
+		</div>
+		<script type="text/javascript" charset="utf-8">
+			//mui初始化
+			mui.init();
+			mui.plusReady(function() {
+				//获取参数
+				var self = plus.webview.currentWebview();
+				var path = self.smallpath;
+				if(path != undefined) {
+					document.getElementById('smallimg').setAttribute('src', path);
+				}
+				document.getElementById('btnsave').addEventListener('tap', function() {
+					aa();
+				});
+			});
+
+			var aa = function() {
+				var outPutPath = plus.io.convertLocalFileSystemURL("_doc/image/151515.jpg");
+				var IMAGE_UNSPECIFIED = "image/*";
+                var PHOTOZOOM = 2; // 获取完图片返回key
+                var PHOTOLAT = 1; // 剪裁完毕后返回key
+                var main = plus.android.runtimeMainActivity();
+                var Intent = plus.android.importClass("android.content.Intent");
+                var MediaStore = plus.android.importClass("android.provider.MediaStore");
+                var File = plus.android.importClass("java.io.File");
+                var Uri = plus.android.importClass("android.net.Uri");
+                var intent = new Intent(Intent.ACTION_PICK, null);
+                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_UNSPECIFIED);
+                main.startActivityForResult(intent, PHOTOZOOM);
+                main.onActivityResult = function(requestCode, resultCode, data) {
+                    if (PHOTOZOOM == requestCode) {
+                        var file = new File(outPutPath);
+                        // 输出目录uri
+                        var outPutUri = Uri.fromFile(file);
+                        plus.android.importClass(data);
+                        var uri = data.getData();
+                        var cropIntent = new Intent("com.android.camera.action.CROP");
+                        cropIntent.setDataAndType(uri, IMAGE_UNSPECIFIED);
+                        // 截图完毕后 输出目录
+                        cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, outPutUri);
+                        cropIntent.putExtra("crop", "true");
+                        // aspectX aspectY 是宽高的比例
+                        cropIntent.putExtra("aspectX", 1);
+                        cropIntent.putExtra("aspectY", 1);
+                        // outputX outputY 是裁剪图片宽高
+                        cropIntent.putExtra("outputX", 64);
+                        cropIntent.putExtra("outputY", 64);
+                        cropIntent.putExtra("return-data", true);
+                        main.startActivityForResult(cropIntent, PHOTOLAT);
+                    } else if (requestCode == PHOTOLAT) {
+                        // 判断 剪裁完后的图片输出是否存在
+                        var file = new File(outPutPath);
+                        var a = file.exists();
+                        console.log(file.path);
+                        alert(a);
+                       
+                    }
+                };
+			}
+
+			//处理右上角关于图标的点击事件；
+			document.getElementById('newphoto').addEventListener('tap', function() {
+
+				var btnArray = [{
+					title: '拍照'
+				}, {
+					title: '从相册选择'
+				}];
+				plus.nativeUI.actionSheet({
+					title: "title",
+					cancel: '取消',
+					buttons: btnArray
+				}, function(e) {
+					var index = e.index; // 
+					switch(index) {
+						case 1:
+							//拍照
+							captureImage();
+
+							function captureImage() {
+								var cmr = plus.camera.getCamera();
+								var res = cmr.supportedImageResolutions[0];
+								var fmt = cmr.supportedImageFormats[0];
+								cmr.captureImage(function(path) {
+										plus.io.resolveLocalFileSystemURL(path, function(entry) {
+											console.log("真实路径：" + entry.fullPath);
+											var arr = new Array([entry.fullPath]);
+											toNewWeiBo(arr);
+										}, function(e) {
+											alert(e.message);
+										});
+									},
+									function(error) {
+										alert("Capture image failed: " + error.message);
+									}, {
+										resolution: res,
+										format: fmt
+									}
+								);
+							}
+							break;
+						case 2:
+							//从相册选择图片
+							plus.gallery.pick(function(e) {
+								for(var i in e.files) {
+									console.log(e.files[i]);
+								}
+								plus.io.resolveLocalFileSystemURL(e.files[0], function(entry) {
+									console.log("真实路径：" + entry.fullPath);
+									var arr = new Array([entry.fullPath]);
+									toNewWeiBo(arr);
+								}, function(e) {
+									alert(e.message);
+								});
+							}, function(e) {
+								console.log("取消选择图片");
+							}, {
+								filter: "image",
+								multiple: true
+							});
+							break;
+					}
+				});
+			});
+
+			function toNewWeiBo(patharr) {
+				mui.openWindow({
+					url: "logocut.html",
+					id: "logocut",
+					createNew: true,
+					extras: {
+						path: patharr //扩展参数
+					},
+					show: {
+						aniShow: 'slide-in-right',
+						duration: 200
+					}
+				});
+			}
+		</script>
+
+	</body>
+
+</html>

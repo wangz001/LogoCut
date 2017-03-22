@@ -1,0 +1,23 @@
+{
+	"index.html": {
+		"resources": [
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/mui.min.css"
+		],
+		"refer": [
+			"logocut.html"
+		]
+	},
+	"logocut.html": {
+		"resources": [
+			"css/mui.min.css",
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"js/jquery.js"
+		],
+		"refer": [
+			"index.html"
+		]
+	}
+}

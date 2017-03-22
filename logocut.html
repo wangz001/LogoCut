@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 id="title" class="mui-title">裁剪</h1>
+			<a id="btngo" class="mui-icon mui-icon-plus mui-pull-right" style="color: #999;"></a>
+		</header>
+		<div class="mui-content">
+			<img id="sourceimg" src="" width="100%">
+			<div id="clip" style="width: 200px; height: 200px; border: 1px #fff solid; position: absolute; top:70px; left: 70px; z-index: 100;"></div>
+		</div>
+
+		<nav class="mui-bar mui-bar-tab">
+			<a id="btnplus" class="mui-tab-item">
+				<span class="mui-icon mui-icon-plus"></span>
+				<span class="mui-tab-label">放大</span>
+			</a>
+			<a id="btnmin" class="mui-tab-item">
+				<span class="mui-icon mui-icon-minus"></span>
+				<span class="mui-tab-label">缩小</span>
+			</a>
+		</nav>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript">
+			mui.init();
+
+			mui.plusReady(function() {
+				//获取参数
+				var self = plus.webview.currentWebview();
+				var path = self.path;
+				if(path != undefined) {
+					document.getElementById('sourceimg').setAttribute('src', path);
+				}
+				aa();
+			});
+		</script>
+	</body>
+
+</html>
