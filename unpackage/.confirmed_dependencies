@@ -3,7 +3,11 @@
 		"resources": [
 			"js/mui.min.js",
 			"fonts/mui.ttf",
-			"css/mui.min.css"
+			"css/mui.min.css",
+			"js/jquery.js",
+			"js/Jcrop/jquery.Jcrop.css",
+			"js/Jcrop/jquery.Jcrop.js",
+			"js/Jcrop/Jcrop.gif"
 		],
 		"refer": [
 			"logocut.html"

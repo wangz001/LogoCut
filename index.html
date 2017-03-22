@@ -3,90 +3,43 @@
 
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<title></title>
-		<script src="js/mui.min.js"></script>
-		<link href="css/mui.min.css" rel="stylesheet" />
-		<script type="text/javascript" charset="utf-8">
-			mui.init();
-		</script>
+		<title>裁剪图片</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="css/mui.min.css">
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="css/app.css" />
+		<link href="js/Jcrop/jquery.Jcrop.css" rel="stylesheet" />
 	</head>
 
 	<body>
 		<header class="mui-bar mui-bar-nav">
-
-			<h1 id="title" class="mui-title">拍车标</h1>
-			<a id="newphoto" class="mui-icon mui-icon-camera mui-pull-right" style="color: #999;"></a>
+			<button id="btnSelect" class="mui-btn mui-btn-success mui-pull-left">选择</button>
+			<h1 id="title" class="mui-title">图片裁剪</h1>
+			<button id="btngo" class="mui-btn mui-btn-success mui-pull-right">完成</button>
 		</header>
 		<div class="mui-content">
-			<div style="padding: 10px;">
-				<img id="smallimg" src="" width="100%">
-			</div>
+			<img id="img" src="" width="100%">
+			<div id="clip" style="width: 200px; height: 200px; border: 1px #fff solid; position: absolute; top:70px; left: 70px; z-index: 100;"></div>
 
-			<button type="button" id="btnsave">保存到服务器</button>
 		</div>
+
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/Jcrop/jquery.Jcrop.js"></script>
 		<script type="text/javascript" charset="utf-8">
-			//mui初始化
-			mui.init();
+			mui.init({});
 			mui.plusReady(function() {
-				//获取参数
-				var self = plus.webview.currentWebview();
-				var path = self.smallpath;
-				if(path != undefined) {
-					document.getElementById('smallimg').setAttribute('src', path);
-				}
-				document.getElementById('btnsave').addEventListener('tap', function() {
-					aa();
+				var url = location.href;
+				url = url.substr(url.indexOf('=') + 1);
+				$('#img').attr('src', url).load(function() {
+					Clip.touchX = $('#img').width(); //当前的手指所处的X坐标
+					Clip.touchY = $('#img').height(); //当前手指的Y坐标		         
 				});
 			});
-
-			var aa = function() {
-				var outPutPath = plus.io.convertLocalFileSystemURL("_doc/image/151515.jpg");
-				var IMAGE_UNSPECIFIED = "image/*";
-                var PHOTOZOOM = 2; // 获取完图片返回key
-                var PHOTOLAT = 1; // 剪裁完毕后返回key
-                var main = plus.android.runtimeMainActivity();
-                var Intent = plus.android.importClass("android.content.Intent");
-                var MediaStore = plus.android.importClass("android.provider.MediaStore");
-                var File = plus.android.importClass("java.io.File");
-                var Uri = plus.android.importClass("android.net.Uri");
-                var intent = new Intent(Intent.ACTION_PICK, null);
-                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_UNSPECIFIED);
-                main.startActivityForResult(intent, PHOTOZOOM);
-                main.onActivityResult = function(requestCode, resultCode, data) {
-                    if (PHOTOZOOM == requestCode) {
-                        var file = new File(outPutPath);
-                        // 输出目录uri
-                        var outPutUri = Uri.fromFile(file);
-                        plus.android.importClass(data);
-                        var uri = data.getData();
-                        var cropIntent = new Intent("com.android.camera.action.CROP");
-                        cropIntent.setDataAndType(uri, IMAGE_UNSPECIFIED);
-                        // 截图完毕后 输出目录
-                        cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, outPutUri);
-                        cropIntent.putExtra("crop", "true");
-                        // aspectX aspectY 是宽高的比例
-                        cropIntent.putExtra("aspectX", 1);
-                        cropIntent.putExtra("aspectY", 1);
-                        // outputX outputY 是裁剪图片宽高
-                        cropIntent.putExtra("outputX", 64);
-                        cropIntent.putExtra("outputY", 64);
-                        cropIntent.putExtra("return-data", true);
-                        main.startActivityForResult(cropIntent, PHOTOLAT);
-                    } else if (requestCode == PHOTOLAT) {
-                        // 判断 剪裁完后的图片输出是否存在
-                        var file = new File(outPutPath);
-                        var a = file.exists();
-                        console.log(file.path);
-                        alert(a);
-                       
-                    }
-                };
-			}
-
-			//处理右上角关于图标的点击事件；
-			document.getElementById('newphoto').addEventListener('tap', function() {
-
+			document.getElementById('btnSelect').addEventListener('tap', function() {
 				var btnArray = [{
 					title: '拍照'
 				}, {
@@ -147,24 +100,157 @@
 							break;
 					}
 				});
+
 			});
 
 			function toNewWeiBo(patharr) {
-				mui.openWindow({
-					url: "logocut.html",
-					id: "logocut",
-					createNew: true,
-					extras: {
-						path: patharr //扩展参数
+				var localimghtml = '<img id="cropbox" src="' + patharr + '" >';
+				$("#img").attr('src', patharr);
+				initJcrop();
+			}
+
+			$("#btngo").click(function() {
+				//获取width和height的百分比
+				var widthPix = (Clip.size / $('#img').width()).toFixed(2) * 100;
+				var heightPix = (Clip.size / $('#img').height()).toFixed(2) * 100;
+				//获取左上角位置百分比
+				var topPix = ((Clip.topCss - 50) / $('#img').height()).toFixed(2) * 100;
+				var leftPix = (Clip.leftCss / $('#img').width()).toFixed(2) * 100;
+
+				//对图片进行裁剪
+				plus.zip.compressImage({
+						src: $('#img').attr('src'), //search.src, //src在这里是第一步Url里的src。也就是本地路径
+						dst: '_doc/a.jpg',
+						overwrite: true,
+						clip: {
+							top: topPix + '%',
+							left: leftPix + '%',
+							width: widthPix + '%',
+							height: heightPix + '%'
+						}
 					},
-					show: {
-						aniShow: 'slide-in-right',
-						duration: 200
+					function(e) {
+						//$('#tmpa').attr('src',e.target)
+						// resizeImage(e.target); //压缩图片
+						
 					}
+				);
+			});
+
+			var Clip = {
+				size: 200, //这个表示正方形目前的边长，乘上一个基数就是当前的像素值
+				range: {}, //用来控制正方形left和top的极限值，以免移出边界
+				topCss: 60, //表示当前的top值
+				leftCss: 60, //表示当前的left值
+				touchX: 500, //当前的手指所处的X坐标
+				touchY: 1000, //当前手指的Y坐标
+				timer: null
+			}
+			var clip = document.getElementById('clip');
+			//开始接触的时候，记录当前的手指位置
+			clip.addEventListener('touchstart', function(event) {
+
+				event.preventDefault();
+			});
+			//移动后，记录新的位置，设置新的top和left值
+			clip.addEventListener('touchmove', function(event) {
+				//设置20ms的事件
+				if(Clip.timer != null) { //函数节流
+					return;
+				}
+				Clip.timer = setTimeout(function() {
+					var x = event.touches ? event.touches[0].clientX : event.screenX;
+					var y = event.touches ? event.touches[0].clientY : event.screenY;
+
+					nowLeft = x - 100;
+					nowTop = y - 100;
+					if(nowLeft < 10)
+						nowLeft = 0;
+					if(nowTop < 50)
+						nowTop = 50;
+					if((nowLeft + 200) > Clip.touchX)
+						nowLeft = Clip.touchX - 200;
+					if(nowTop + 200 > Clip.touchY)
+						nowTop = Clip.touchY - 160;
+
+					//$('#clip').html(x+","+y+"<br/>s:"+nowLeft+","+nowTop+"<br/>"+ Clip.touchX +","+ Clip.touchY)
+
+					$('#clip').css({
+						left: nowLeft + 'px',
+						top: nowTop + 'px'
+					});
+					Clip.leftCss = nowLeft;
+					Clip.topCss = nowLeft;
+
+					Clip.timer = null;
+				}, 20);
+
+			});
+			
+			
+			
+			//---------------------------
+			function initJcrop() {
+				$('#img').Jcrop({
+					onSelect: updateCoords,
+					allowMove: true,
+					aspectRatio: 1,
+					boxWidth: 300,
+					boxHeight: 300
+				}, function() {
+
+					//图片实际尺寸  
+					var bb = this.getBounds();
+					var bWidth = Number(bb[0]) / 2;
+					var bHeight = Number(bb[1]) / 2;
+
+					this.setSelect([0, 0, bWidth, bHeight]);
+
+					var ss = this.getWidgetSize();
+					var aheight = (300 - Number(ss[1])) / 2 + "px";
+					$(".jcrop-holder").css("margin-top", aheight);
+
 				});
 			}
-		</script>
 
+			function updateCoords(c) {
+				//      console.log(c);  
+				var img = document.getElementById("cropbox");
+				var ctx = document.getElementById("myCan").getContext("2d");
+
+				//img,开始剪切的x,Y坐标宽高，放置图像的x,y坐标宽高。  
+				ctx.drawImage(img, c.x, c.y, c.w, c.h, 0, 0, 200, 200);
+			}
+
+			function subform() {
+
+				if($("#imgfield").html()) {
+					//获取裁剪完后的base64图片url,转换为blob  
+					var data = document.getElementById("myCan").toDataURL();
+					var formData = new FormData();
+					formData.append("imageName", dataURLtoBlob(data));
+
+					var httprequest = new XMLHttpRequest();
+					var apiurl = ""; //上传图片的api接口，自行填写  
+					httprequest.open('POST', apiurl, true);
+					httprequest.send(formData);
+					httprequest.onreadystatechange = function() {
+						if(httprequest.status == 200 && httprequest.readyState == 4) {
+
+							var json = JSON.parse(httprequest.responseText);
+							console.log(json)
+						} else {
+							alert("上传图片失败！api错误")
+						}
+					};
+
+				} else {
+
+					alert("请选择图片!")
+				}
+
+			}
+		</script>
 	</body>
 
 </html>
