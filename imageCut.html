@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 id="title" class="mui-title">裁剪</h1>
+			<a id="btngo" class="mui-icon mui-icon-plus mui-pull-right" style="color: #999;"></a>
+		</header>
+		<div class="mui-content">
+			<img id="sourceimg" src="" width="100%">
+			<div id="clip" style="width: 200px; height: 200px; border: 1px #fff solid; position: absolute; top:70px; left: 70px; z-index: 100;"></div>
+		</div>
+
+		<nav class="mui-bar mui-bar-tab">
+			<a id="btnplus" class="mui-tab-item">
+				<span class="mui-icon mui-icon-plus"></span>
+				<span class="mui-tab-label">放大</span>
+			</a>
+			<a id="btnmin" class="mui-tab-item">
+				<span class="mui-icon mui-icon-minus"></span>
+				<span class="mui-tab-label">缩小</span>
+			</a>
+		</nav>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			
+			mui.plusReady(function() {
+				//获取参数
+				var self = plus.webview.currentWebview();
+				var path = self.path;
+				if(path != undefined) {
+					document.getElementById('sourceimg').setAttribute('src', path);
+					Clip.touchX = $('#sourceimg').width(); //当前的手指所处的X坐标
+					Clip.touchY = $('#sourceimg').height(); //当前手指的Y坐标	
+				}
+
+
+			});
+			
+			var Clip = {
+				size: 200, //这个表示正方形目前的边长，乘上一个基数就是当前的像素值
+				range: {}, //用来控制正方形left和top的极限值，以免移出边界
+				topCss: 60, //表示当前的top值
+				leftCss: 60, //表示当前的left值
+				touchX: 500, //当前的手指所处的X坐标
+				touchY: 1000, //当前手指的Y坐标
+				timer: null
+			}
+			
+			//放大缩小
+				document.getElementById('btnplus').addEventListener("tap", function() {
+					$('#clip').css({
+						width: Clip.size + 'px',
+						height: Clip.size + 'px'
+					});
+					Clip.size = Clip.size + 10;
+				});
+				document.getElementById('btnmin').addEventListener("tap", function() {
+					$('#clip').css({
+						width: Clip.size + 'px',
+						height: Clip.size + 'px'
+					});
+					Clip.size = Clip.size - 10;
+				});
+				//保存
+				$("#btngo").click(function() {
+					//获取width和height的百分比
+					var widthPix = (Clip.size / $('#sourceimg').width()).toFixed(2) * 100;
+					var heightPix = (Clip.size / $('#sourceimg').height()).toFixed(2) * 100;
+					//获取左上角位置百分比
+					var topPix = ((Clip.topCss) / $('#sourceimg').height()).toFixed(2) * 100;
+					var leftPix = (Clip.leftCss / $('#sourceimg').width()).toFixed(2) * 100;
+					console.log("boacun-----------" + widthPix);
+					//对图片进行裁剪
+					plus.zip.compressImage({
+							src: $('#sourceimg').attr('src'), //search.src, //src在这里是第一步Url里的src。也就是本地路径
+							dst: '_doc/a.jpg',
+							overwrite: true,
+							clip: {
+								top: topPix + '%',
+								left: leftPix + '%',
+								width: widthPix + '%',
+								height: heightPix + '%'
+							}
+						},
+						function(e) {
+							//$('#tmpa').attr('src',e.target)
+							// resizeImage(e.target); //压缩图片
+							console.log(e.target);
+							mui.openWindow({
+								url: "index.html",
+								id: "index",
+								createNew: true,
+								extras: {
+									smallpath: e.target //扩展参数
+								},
+								show: {
+									aniShow: 'slide-in-right',
+									duration: 200
+								}
+							});
+						}
+					);
+				});
+
+				var clip = document.getElementById('clip');
+				//开始接触的时候，记录当前的手指位置
+				clip.addEventListener('touchstart', function(event) {
+
+					event.preventDefault();
+				});
+				//移动后，记录新的位置，设置新的top和left值
+				clip.addEventListener('touchmove', function(event) {
+					//设置20ms的事件
+					if(Clip.timer != null) { //函数节流
+						return;
+					}
+					
+					Clip.timer = setTimeout(function() {
+						var x = event.touches ? event.touches[0].clientX : event.screenX;
+						var y = event.touches ? event.touches[0].clientY : event.screenY;
+						nowLeft = x - 100;
+						nowTop = y - 100;
+						if(nowLeft < 10)
+							nowLeft = 0;
+						if(nowTop < 50)
+							nowTop = 50;
+						if((nowLeft + 200) > Clip.touchX)
+							nowLeft = Clip.touchX - 200;
+						if(nowTop + 200 > Clip.touchY)
+							nowTop = Clip.touchY - 160;
+
+						//$('#clip').html(x+","+y+"<br/>s:"+nowLeft+","+nowTop+"<br/>"+ Clip.touchX +","+ Clip.touchY)
+
+						$('#clip').css({
+							left: nowLeft + 'px',
+							top: nowTop + 'px'
+						});
+						Clip.leftCss = nowLeft;
+						Clip.topCss = nowLeft;
+
+						Clip.timer = null;
+					}, 20);
+
+				});
+		</script>
+	</body>
+
+</html>

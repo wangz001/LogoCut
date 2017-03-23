@@ -1,372 +1,108 @@
+<!DOCTYPE html>
+<html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta charset="utf-8">
+		<title>裁剪图片</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="css/mui.min.css">
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="css/app.css" />
+		<link href="js/Jcrop/jquery.Jcrop.css" rel="stylesheet" />
+	</head>
+
 	<body>
-
-		<style type="text/css">
-			/* reset */
-			
-			* {
-				margin: 0;
-				padding: 0;
-				list-style-type: none;
-			}
-			
-			a {
-				blr: expression(this.onFocus=this.blur())
-			}
-			/*去掉a标签的虚线框，避免出现奇怪的选中区域*/
-			
-			:focus {
-				outline: 0;
-			}
-			
-			label {
-				cursor: pointer;
-			}
-			
-			img {
-				vertical-align: middle;
-			}
-			
-			table {
-				empty-cells: show;
-				border-collapse: collapse;
-				border-spacing: 0;
-			}
-			
-			h1 {
-				font-size: 16px;
-			}
-			
-			h2,
-			h3,
-			h4 {
-				font-size: 14px;
-			}
-			
-			h5,
-			h6 {
-				font-size: 12px;
-			}
-			
-			abbr,
-			acronym {
-				border: 0;
-				font-variant: normal
-			}
-			
-			address,
-			caption,
-			cite,
-			code,
-			dfn,
-			em,
-			th,
-			var,
-			optgroup {
-				font-style: normal;
-				font-weight: normal
-			}
-			
-			input,
-			button,
-			textarea,
-			select,
-			optgroup,
-			option {
-				font-family: inherit;
-				font-size: inherit;
-				font-style: inherit;
-				font-weight: inherit
-			}
-			
-			input,
-			button,
-			textarea,
-			select {
-				*font-size: 100%
-			}
-			
-			a,
-			img {
-				border: 0;
-			}
-			
-			a,
-			a:visited {
-				color: #5e5e5e;
-				text-decoration: none;
-			}
-			
-			a:hover {
-				color: #4183C4;
-				text-decoration: underline;
-			}
-			
-			.clear {
-				display: block;
-				overflow: hidden;
-				clear: both;
-				height: 0;
-				line-height: 0;
-				font-size: 0;
-			}
-			
-			.clearfix:after {
-				content: ".";
-				display: block;
-				height: 0;
-				clear: both;
-				visibility: hidden;
-			}
-			
-			.clearfix {
-				display: inline-table;
-			}
-			/* Hides from IE-mac \*/
-			
-			*html .clearfix {
-				height: 1%;
-			}
-			
-			.clearfix {
-				display: block;
-			}
-			/* End hide from IE-mac */
-			
-			*+html .clearfix {
-				min-height: 1%;
-			}
-			
-			body {
-				font: 12px/180% Arial, Lucida, Verdana, "宋体", Helvetica, sans-serif;
-				color: #333;
-				background: #fff;
-			}
-			/* shortcut */
-			
-			.shortcut {
-				height: 32px;
-				line-height: 32px;
-				font-size: 12px;
-				background: #eee;
-				text-transform: uppercase;
-				box-shadow: 1px 0px 2px rgba(0, 0, 0, 0.2);
-				border-bottom: 1px solid #DDDDDD;
-			}
-			
-			.shortcut h1 {
-				font-size: 14px;
-				font-family: "微软雅黑", "宋体";
-			}
-			
-			.shortcut a,
-			.shortcut h1 {
-				padding: 0px 10px;
-				letter-spacing: 1px;
-				color: #333;
-				text-shadow: 0px 1px 1px #fff;
-				display: block;
-				float: left;
-				width: 360px;
-				height: 32px;
-				overflow: hidden;
-			}
-			
-			.shortcut a:hover {
-				background: #fff;
-			}
-			
-			.shortcut span.right {
-				float: right;
-				display: inline-block;
-				width: 468px;
-				height: 15px;
-				overflow: hidden;
-				margin: 8px 5px 0 0;
-			}
-			
-			.shortcut .close {
-				background: url(/Public/images/close-demo.gif) no-repeat 0 0;
-				width: 20px;
-				height: 20px;
-				line-height: 99em;
-				overflow: hidden;
-				display: inline-block;
-				margin: 6px 10px 0 10px;
-				float: right;
-				padding: 0;
-				-webkit-transition: all .3s ease-out 0s;
-				-moz-transition: all .3s ease-out 0s;
-				-ms-transition: all .3s ease-out 0s;
-				-o-transition: all .3s ease-out 0s;
-				transition: all .3s ease-out 0s;
-			}
-			
-			.shortcut .close:hover {
-				background: url(/Public/images/close-demo.gif) no-repeat 0 -20px
-			}
-			
-			.shortcut .close:active {
-				background: url(/Public/images/close-demo.gif) no-repeat 0 -40px
-			}
-		</style>
-
-		<div class="shortcut">
-			<h1><a href="http://www.17sucai.com/pins/11495.html">html5手机上传图片裁剪尺寸代码</a></h1>
-			<a title="查看原网页" href="http://www.17sucai.com/preview/380761/2015-07-16/html5/index.html" class="close">关闭</a>
-
-			<span class="right">
-		<script type="text/javascript">
-			/*新468*15*/
-			var cpro_id = "u1425128";
-		</script>
-		<script type="text/javascript" src="http://cpro.baidustatic.com/cpro/ui/c.js"></script>
-	</span>
-
-		</div>
-		<!-- shortcut end -->
-
-		<script type="text/javascript" src="http://www.17sucai.com/static/js/jquery-1.4.2.min.js"></script>
-		<script type="text/javascript">
-			$(document).ready(function() {
-
-				var iframeHeight = function() {
-					var _height = $(window).height() - 34;
-					$('#content').height(_height);
-				}
-				window.onresize = iframeHeight;
-				$(function() {
-					iframeHeight();
-				});
-
-			});
-		</script>
-
-		<div id="container" style="overflow:hidden;">
-			<!--加载资源-->
-			<div class="lazy_tip" id="lazy_tip"><span>1%</span><br> 载入中......</div>
-			<div class="lazy_cover"></div>
-			<div class="resource_lazy hide"></div>
-			<div class="pic_edit">
-				<h2 style="color:#4eaf7a;">双指旋转和双指缩放</h2>
-				<div id="clipArea"></div>
-				<button id="upload2">选择图片</button>
-				<button id="clipBtn">上传图片</button>
-				<input type="file" id="file" style="opacity: 0;position: fixed;bottom: -100px">
-				<div id="plan" style="display:none">比例剪切后尺寸<canvas id="myCanvas"></canvas>
-					<h2 onClick="Close();" style="cursor:pointer; display:inline-block">关闭</h2></div>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 id="title" class="mui-title">图片裁剪</h1>
+			<button id="btngo" class="mui-btn mui-btn-success mui-pull-right">上传</button>
+		</header>
+		<div class="mui-content" id="imgcontent">
+			<div style="border: 10px;margin: 30px;">
+				<img id="img" src="" width="100%">
 			</div>
-			<img src="" fileName="" id="hit" style="display:none;z-index: 9">
-
-			<div id="cover"></div>
-			<script src="js/mui.min.js"></script>
-		<script type="text/javascript" src="js/photoClip/jquery-2.1.3.min.js"></script>
-		<script type="text/javascript" src="js/photoClip/hammer.js"></script>
-		<script type="text/javascript" src="js/photoClip/iscroll-zoom.js"></script>
-		<script type="text/javascript" src="js/photoClip/lrz.all.bundle.js"></script>
-		<script type="text/javascript" src="js/photoClip/jquery.photoClip.js"></script>
-			<script>
-				var hammer = '';
-				var currentIndex = 0;
-				var body_width = $('body').width();
-				var body_height = $('body').height();
-
-				$("#clipArea").PhotoClip("#clipArea", {
-    size: [260, 260], // 截取框的宽和高组成的数组。默认值为[260,260]
-    outputSize: [640, 640], // 输出图像的宽和高组成的数组。默认值为[0,0]，表示输出图像原始大小
-    //outputType: "jpg", // 指定输出图片的类型，可选 "jpg" 和 "png" 两种种类型，默认为 "jpg"
-    file: "#file", // 上传图片的<input type="file">控件的选择器或者DOM对象
-    view: "#view", // 显示截取后图像的容器的选择器或者DOM对象
-    ok: "#clipBtn", // 确认截图按钮的选择器或者DOM对象
-    loadStart: function(file) {}, // 开始加载的回调函数。this指向 fileReader 对象，并将正在加载的 file 对象作为参数传入
-    loadComplete: function(src) {}, // 加载完成的回调函数。this指向图片对象，并将图片地址作为参数传入
-    loadError: function(event) {}, // 加载失败的回调函数。this指向 fileReader 对象，并将错误事件的 event 对象作为参数传入
-    clipFinish: function(dataURL) {}, // 裁剪完成的回调函数。this指向图片对象，会将裁剪出的图像数据DataURL作为参数传入
-});
-
-				//图片上传
-				function saveImageInfo() {
-					var filename = $('#hit').attr('fileName');
-					var img_data = $('#hit').attr('src');
-					if(img_data == "") {
-						alert('null');
-					}
-					//alert(filename+'|'+img_data);
-					render(img_data);
-
-					$.post("这里填写图片获取的网址", {
-						image: img_data
-					}, function(data) {
-						if(data != '') {
-							//			console.info(data);
-							//data 为返回文件名；
-							alert('提交成功');
-						}
-					});
-				}
-
-				/*获取文件拓展名*/
-				function getFileExt(str) {
-					var d = /\.[^\.]+$/.exec(str);
-					return d;
-				}
-
-				//图片上传结束
-				$(function() {
-					$('#upload2').on('touchstart', function() {
-						//图片上传按钮
-						$('#file').click();
-					});
-				})
-
-				function Close() {
-					$('#plan').hide();
-				}
-
-				// 渲染 Image 缩放尺寸  
-				function render(src) {
-					var MAX_HEIGHT = 256; //Image 缩放尺寸 
-					// 创建一个 Image 对象  
-					var image = new Image();
-
-					// 绑定 load 事件处理器，加载完成后执行  
-					image.onload = function() {
-						// 获取 canvas DOM 对象  
-						var canvas = document.getElementById("myCanvas");
-						// 如果高度超标  
-						if(image.height > MAX_HEIGHT) {
-							// 宽度等比例缩放 *=  
-							image.width *= MAX_HEIGHT / image.height;
-							image.height = MAX_HEIGHT;
-						}
-						// 获取 canvas的 2d 环境对象,  
-						// 可以理解Context是管理员，canvas是房子  
-						var ctx = canvas.getContext("2d");
-						// canvas清屏  
-						ctx.clearRect(0, 0, canvas.width, canvas.height);
-						canvas.width = image.width; // 重置canvas宽高  
-						canvas.height = image.height;
-						// 将图像绘制到canvas上  
-						ctx.drawImage(image, 0, 0, image.width, image.height);
-						// !!! 注意，image 没有加入到 dom之中  
-
-						var dataurl = canvas.toDataURL("image/jpeg");
-						var imagedata = encodeURIComponent(dataurl);
-						$('#plan').attr('data-src', dataurl);
-						$('#plan').show();
-					};
-					// 设置src属性，浏览器会自动加载。  
-					// 记住必须先绑定render()事件，才能设置src属性，否则会出同步问题。  
-					image.src = src;
-				};
-			</script>
-
 		</div>
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init({});
+			mui.plusReady(function() {
+				var self = plus.webview.currentWebview();
+				var path = self.smallpath;
+				if(path != null) {
+					smallPath = path;
+					$('#img').attr('src', path).load(function() {});
+				}
+			});
 
-		<script type="text/javascript">
-			var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-			document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F382f81c966395258f239157654081890' type='text/javascript'%3E%3C/script%3E"));
+			var smallPath = "";
+			$("#btngo").bind("click", function() {
+				if(smallPath.length > 0) {
+					//压缩图片
+					plus.zip.compressImage({
+							src: smallPath,
+							dst: "_doc/alogocut.jpg",
+							overwrite: true,
+							quality: 20,
+							width: 200,
+							height: 200
+						},
+						function(e) {
+							createUpload(e.target);
+						},
+						function(error) {
+							alert("压缩图片失败!");
+						});
+				} else {
+					alert("图片地址为空");
+				}
+			});
+
+			var url = "http://192.168.0.61/testimg/";
+			// 创建上传任务
+			function createUpload(file) {
+				var task = plus.uploader.createUpload(url, {
+						method: "POST",
+						blocksize: 204800,
+						priority: 100
+					},
+					function(t, status) {
+						// 上传完成
+						if(status == 200) {
+							mui.toast("上传成功");
+							dealResult(t);
+						} else {
+							mui.toast("上传失败:" + status);
+						}
+					}
+				);
+				task.addFile(file, {
+					key: "logocut"
+				});
+				task.start();
+			}
+
+			var dealResult = function(t) {
+				alert(t.responseText);
+				//return;
+				var txt = JSON.stringify(t.responseText);
+				var aa = txt.substring(1, txt.length - 1);
+				aa = aa.replace(/\\/g, "");
+				var rr = JSON.parse(aa);
+				mui.confirm("是" + rr.BsName + "吗？", "识别正确吗", function() {
+					console.log("shi");
+					mui.get(url, {
+						nomatch: rr.ImgID
+					}, function() {
+						console.log("发送了"+rr.ImgID);
+						plus.webview.getLaunchWebview().reload();
+						mui.back();
+					});
+				});
+			}
 		</script>
 	</body>
 

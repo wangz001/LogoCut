@@ -1,44 +1,66 @@
 {
-	"index.html": {
-		"resources": [
-			"js/mui.min.js",
-			"fonts/mui.ttf",
-			"css/mui.min.css",
-			"js/jquery.js",
-			"js/Jcrop/jquery.Jcrop.css",
-			"js/Jcrop/jquery.Jcrop.js",
-			"js/Jcrop/Jcrop.gif"
-		],
-		"refer": [
-			"logocut.html"
-		]
-	},
-	"logocut.html": {
-		"resources": [
-			"css/mui.min.css",
-			"js/mui.min.js",
-			"fonts/mui.ttf",
-			"js/jquery.js",
-			"js/Jcrop/jquery.Jcrop.css",
-			"js/Jcrop/jquery.Jcrop.js",
-			"js/photoClip/jquery-2.1.3.min.js",
-			"js/Jcrop/Jcrop.gif"
-		],
-		"refer": [
-			"index.html"
-		]
-	},
-	"new_file.html": {
-		"resources": [
-			"js/mui.min.js",
-			"js/photoClip/hammer.js",
-			"css/style.css",
-			"js/photoClip/iscroll-zoom.js",
-			"js/photoClip/lrz.all.bundle.js",
-			"js/photoClip/jquery.photoClip.js",
-			"js/photoClip/jquery-2.1.3.min.js",
-			"js/photoClip/sonic.js",
-			"js/jquery.js"
-		]
-	}
+  "index.html": {
+    "resources": [
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/jquery.js",
+      "js/Jcrop/jquery.Jcrop.css",
+      "js/Jcrop/jquery.Jcrop.js",
+      "js/Jcrop/Jcrop.gif"
+    ],
+    "refer": [
+      "logocut.html",
+      "imageCut.html"
+    ]
+  },
+  "logocut.html": {
+    "resources": [
+      "css/mui.min.css",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "js/jquery.js",
+      "js/Jcrop/jquery.Jcrop.css",
+      "js/Jcrop/jquery.Jcrop.js",
+      "js/photoClip/jquery-2.1.3.min.js",
+      "js/Jcrop/Jcrop.gif",
+      "css/rubicon.jpg",
+      "js/Jcrop/jquery.min.js",
+      "js/mui.js"
+    ],
+    "refer": [
+      "index.html",
+      "new_file.html"
+    ]
+  },
+  "new_file.html": {
+    "resources": [
+      "js/mui.min.js",
+      "js/photoClip/hammer.js",
+      "css/style.css",
+      "js/photoClip/iscroll-zoom.js",
+      "js/photoClip/lrz.all.bundle.js",
+      "js/photoClip/jquery.photoClip.js",
+      "js/photoClip/jquery-2.1.3.min.js",
+      "js/photoClip/sonic.js",
+      "js/jquery.js",
+      "js/Jcrop/jquery.Jcrop.css",
+      "css/mui.min.css",
+      "fonts/mui.ttf"
+    ],
+    "refer": [
+      "logocut.html"
+    ]
+  },
+  "imageCut.html": {
+    "resources": [
+      "fonts/mui.ttf",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "js/jquery.js"
+    ],
+    "refer": [
+      "index.html"
+    ]
+  }
 }
