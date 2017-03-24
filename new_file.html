@@ -55,15 +55,18 @@
 						},
 						function(error) {
 							alert("压缩图片失败!");
+							plus.nativeUI.closeWaiting();
 						});
 				} else {
 					alert("图片地址为空");
+
 				}
 			});
-
-			var url = "http://192.168.0.61/testimg/";
+			//var url = "http://192.168.0.61/testimg/";
+			var url = "http://is.yiche.com/logomatch/";
 			// 创建上传任务
 			function createUpload(file) {
+				plus.nativeUI.showWaiting("正在上传...");
 				var task = plus.uploader.createUpload(url, {
 						method: "POST",
 						blocksize: 204800,
@@ -77,30 +80,42 @@
 						} else {
 							mui.toast("上传失败:" + status);
 						}
+						plus.nativeUI.closeWaiting();
 					}
 				);
 				task.addFile(file, {
 					key: "logocut"
 				});
 				task.start();
+				setTimeout(function() {
+					plus.nativeUI.closeWaiting();
+				}, 5000);
 			}
 
 			var dealResult = function(t) {
-				alert(t.responseText);
-				//return;
 				var txt = JSON.stringify(t.responseText);
 				var aa = txt.substring(1, txt.length - 1);
 				aa = aa.replace(/\\/g, "");
 				var rr = JSON.parse(aa);
-				mui.confirm("是" + rr.BsName + "吗？", "识别正确吗", function() {
-					console.log("shi");
-					mui.get(url, {
-						nomatch: rr.ImgID
-					}, function() {
-						console.log("发送了"+rr.ImgID);
+				var btnArray = ['正确', '不正确'];
+				mui.confirm(t.responseText, "是" + rr.BsName + "吗？", btnArray, function(e) {
+					if(e.index == 0) {
+						console.log("识别正确");
 						plus.webview.getLaunchWebview().reload();
-						mui.back();
-					});
+						setTimeout(function() {
+							mui.back();
+						}, 500);
+					} else {
+						//识别错误
+						mui.get(url, {
+							nomatch: rr.ImgID
+						}, function() {
+							mui.toast("结果已反馈,谢谢~");
+							plus.webview.getLaunchWebview().reload();
+							mui.back();
+						});
+					}
+
 				});
 			}
 		</script>

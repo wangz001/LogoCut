@@ -1,13 +1,12 @@
 <!doctype html>
 <html>
-
+<!--jcrop插件裁剪-->
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="css/mui.min.css" rel="stylesheet" />
 		<link href="js/Jcrop/jquery.Jcrop.css" rel="stylesheet" />
-
 	</head>
 
 	<body>
@@ -33,7 +32,7 @@
 			</a>
 		</nav>
 		<script src="js/mui.min.js"></script>
-		<script type="text/javascript" src="js/Jcrop/jquery.min.js"></script>
+		<script type="text/javascript" src="js/jquery.js"></script>
 		<script type="text/javascript" src="js/Jcrop/jquery.Jcrop.js"></script>
 		<script type="text/javascript">
 			mui.init({
@@ -45,7 +44,6 @@
 				var self = plus.webview.currentWebview();
 				var uploadState = self.uploadState;
 				if(uploadState != undefined && uploadState == "true") {
-					toNewWeiBo(path)
 				}
 			});
 
@@ -74,7 +72,7 @@
 										plus.io.resolveLocalFileSystemURL(path, function(entry) {
 											console.log("真实路径：" + entry.fullPath);
 											var arr = new Array([entry.fullPath]);
-											toNewWeiBo(arr);
+											showImage(arr);
 										}, function(e) {
 											alert(e.message);
 										});
